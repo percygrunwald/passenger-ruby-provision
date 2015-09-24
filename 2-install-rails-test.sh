@@ -25,12 +25,6 @@ rvm use ruby
 gem install bundler --no-rdoc --no-ri
 gem install rails --no-rdoc --no-ri
 
-# Set proper paths in nginx and restart
-pass_root=`passenger-config --root` && sudo sed -i "s,\# passenger_root .*;,passenger_root $pass_root;,g" /etc/nginx/nginx.conf
-sudo sed -i 's,# passenger_ruby,passenger_ruby,g' /etc/nginx/nginx.conf
-sudo sed -i 's,# gzip,gzip,g' /etc/nginx/nginx.conf
-sudo service nginx restart
-
 # Load demo
 sudo rm -rf /var/www/rails-test
 sudo mkdir -p /var/www/rails-test
