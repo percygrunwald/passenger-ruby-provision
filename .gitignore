@@ -1,0 +1,21 @@
+# FILE IGNORES
+*.iml
+*.ipr
+*.log
+log-*.php
+Vagrantfile
+
+# DOT DIRECTORY IGNORES
+.idea/
+.tmp/
+.sass-cache/
+.vagrant/
+www/images/uploads/
+www/images/markers/
+docs/
+
+
+# DIRECTORY IGNORES
+node_modules/
+bower_components/
+vendor/
