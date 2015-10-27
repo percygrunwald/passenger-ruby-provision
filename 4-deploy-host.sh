@@ -13,31 +13,16 @@ if [ -z "$2" ]
     exit
 fi
 
-# Load RVM into a shell session *as a function*
-if [[ -s "$HOME/.rvm/scripts/rvm" ]] ; then
-  # First try to load from a user install
-  source "$HOME/.rvm/scripts/rvm"
-elif [[ -s "/usr/local/rvm/scripts/rvm" ]] ; then
-  # Then try to load from a root install
-  source "/usr/local/rvm/scripts/rvm"
-else
-  printf "ERROR: An RVM installation was not found.\n"
-fi
-
 INPUT_USERNAME=$1
 DEPLOY_HOSTNAME=$2
 
 cd /var/www/$INPUT_USERNAME
-rvm install ruby
-rvm use ruby
-gem install bundle
-
 sudo chmod 755 config
 RAKE_SECRET=`bundle exec rake secret`
 sudo chmod 700 config
 
 # Add nginx configuration
-RUBY_COMMAND=`passenger-config about ruby-command | grep Nginx | cut -d ':' -f 2 | cut -d ' ' -f 3`
+RUBY_COMMAND="/home/$INPUT_USERNAME/.rbenv/shims/ruby"
 cat << EOF | sudo tee /etc/nginx/sites-enabled/$INPUT_USERNAME.conf
 server {
     listen 80;

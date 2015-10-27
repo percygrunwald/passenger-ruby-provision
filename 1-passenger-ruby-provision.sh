@@ -28,19 +28,23 @@ APT::Periodic::Unattended-Upgrade "1";
 EOF
 
 # Install Packages
-sudo apt-get install -qq --fix-missing language-pack-en curl gnupg build-essential \
+sudo apt-get install -y --fix-missing language-pack-en curl gnupg build-essential \
+git-core curl zlib1g-dev libssl-dev libreadline-dev \
+libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev \
+python-software-properties libffi-dev \
 apt-transport-https ca-certificates \
 nginx-extras passenger git \
-mariadb-server imagemagick \
+mariadb-server libmariadbd-dev imagemagick libgmp3-dev \
 nodejs && sudo ln -sf /usr/bin/nodejs /usr/local/bin/node
 
-# Install RVM
-curl -sSL https://get.rvm.io | sudo bash -s stable
-sudo usermod -a -G rvm `whoami`
+# Install rbenv, ruby and bundler
+./1.1-install-rbenv.sh
 
 # Set proper paths in nginx and restart
-pass_root=`passenger-config --root` && sudo sed -i "s,\# passenger_root .*;,passenger_root $pass_root;,g" /etc/nginx/nginx.conf
-sudo sed -i 's,# passenger_ruby,passenger_ruby,g' /etc/nginx/nginx.conf
+PASS_ROOT=`passenger-config --root`
+INPUT_USERNAME=`whoami`
+sudo sed -i "s,\# passenger_root .*;,passenger_root $PASS_ROOT;,g" /etc/nginx/nginx.conf
+sudo sed -i "s,\# passenger_ruby .*,passenger_ruby /home/$INPUT_USERNAME/.rbenv/shims/ruby;,g" /etc/nginx/nginx.conf
 sudo sed -i 's,# gzip,gzip,g' /etc/nginx/nginx.conf
 sudo service nginx restart
 
