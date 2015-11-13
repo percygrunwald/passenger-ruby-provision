@@ -21,9 +21,13 @@ sudo chown -R $INPUT_USERNAME: /var/www/$INPUT_USERNAME
 
 sudo -u $INPUT_USERNAME -H git init --bare /home/$INPUT_USERNAME/$INPUT_USERNAME.git
 
-# Copy deploy script to new user's home
+# Copy bashrc and deploy script to new user's home
 echo "Copying deploy script to /home/$INPUT_USERNAME"
+sudo cp ~/.profile /home/$INPUT_USERNAME
+sudo cp ~/.bashrc /home/$INPUT_USERNAME
 sudo cp ~/*.sh /home/$INPUT_USERNAME
+sudo chown $INPUT_USERNAME: /home/$INPUT_USERNAME/.profile
+sudo chown $INPUT_USERNAME: /home/$INPUT_USERNAME/.bashrc
 sudo chown $INPUT_USERNAME: /home/$INPUT_USERNAME/*.sh
 sudo chmod +x /home/$INPUT_USERNAME/*.sh
 
