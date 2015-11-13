@@ -17,8 +17,6 @@ INPUT_USERNAME=$1
 DEPLOY_HOSTNAME=$2
 
 cd /var/www/$INPUT_USERNAME
-sudo chmod 755 config
-RAKE_SECRET=`bundle exec rake secret`
 sudo chmod 700 config
 
 # Add nginx configuration
@@ -34,11 +32,13 @@ server {
     # Turn on Passenger
     passenger_enabled on;
     passenger_ruby $RUBY_COMMAND;
-    passenger_env_var DATABASE_USERNAME root;
-    passenger_env_var DATABASE_PASSWORD secret;
-    passenger_env_var DATABASE_DB example;
-    passenger_env_var DATABASE_HOST localhost;
-    passenger_env_var SECRET_KEY_BASE $RAKE_SECRET;
+    rails_env production;
+}
+
+server {
+    listen 80;
+    server_name nowwwdomain.com;
+    return 301 http://$DEPLOY_HOSTNAME$request_uri;
 }
 EOF
 sudo nano /etc/nginx/sites-enabled/$INPUT_USERNAME.conf
