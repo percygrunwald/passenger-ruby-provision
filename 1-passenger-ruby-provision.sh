@@ -37,8 +37,8 @@ nginx-extras passenger git \
 mariadb-server libmariadbd-dev imagemagick libgmp3-dev \
 nodejs && sudo ln -sf /usr/bin/nodejs /usr/local/bin/node
 
-# Install rbenv, ruby and bundler
-./1.1-install-rbenv.sh
+# Install Let's Encrypt helper
+git clone https://github.com/letsencrypt/letsencrypt
 
 # Set proper paths in nginx and restart
 PASS_ROOT=`passenger-config --root`
@@ -47,6 +47,15 @@ sudo sed -i "s,\# passenger_root .*;,passenger_root $PASS_ROOT;,g" /etc/nginx/ng
 sudo sed -i "s,\# passenger_ruby .*,passenger_ruby /home/$INPUT_USERNAME/.rbenv/shims/ruby;,g" /etc/nginx/nginx.conf
 sudo sed -i 's,# gzip,gzip,g' /etc/nginx/nginx.conf
 sudo service nginx restart
+
+# Add swap
+sudo fallocate -l 4G /swapfile && \
+sudo chmod 600 /swapfile && \
+sudo mkswap /swapfile && \
+sudo swapon /swapfile && \
+echo "/swapfile   none    swap    sw    0   0" | sudo tee -a /etc/fstab && \
+echo "vm.swappiness=10" | sudo tee -a /etc/sysctl.conf && \
+echo "vm.vfs_cache_pressure = 50" | sudo tee -a /etc/sysctl.conf
 
 # Reboot so that upgraded packages come into effect
 sudo reboot
