@@ -39,6 +39,7 @@ nodejs && sudo ln -sf /usr/bin/nodejs /usr/local/bin/node
 
 # Install Let's Encrypt helper
 git clone https://github.com/letsencrypt/letsencrypt
+sudo openssl dhparam -out /etc/nginx/dhparam.pem 2048
 
 # Set proper paths in nginx and restart
 PASS_ROOT=`passenger-config --root`
