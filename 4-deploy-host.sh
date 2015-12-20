@@ -65,7 +65,7 @@ server {
 server {
     server_name $DEPLOY_HOSTNAME;
     listen 80;
-    return 301 http://\$servername\$request_uri;
+    return 301 https://\$server_name\$request_uri;
 }
 EOF
 sudo nano /etc/nginx/sites-enabled/$INPUT_USERNAME.conf

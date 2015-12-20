@@ -2,14 +2,10 @@
 
 INPUT_USERNAME=`whoami`
 
-./1.1-install-rbenv.sh
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
-export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"
-
 cd /var/www/$INPUT_USERNAME
 
-git --work-tree=/var/www/$INPUT_USERNAME --git-dir=/home/$INPUT_USERNAME/$INPUT_USERNAME.git checkout master -f
+git --work-tree=/var/www/$INPUT_USERNAME \
+--git-dir=/home/$INPUT_USERNAME/$INPUT_USERNAME.git checkout master -f
 
 bundle install --path vendor --deployment --without development test
 
@@ -30,7 +26,7 @@ export PATH="\$HOME/.rbenv/bin:\$PATH"
 eval "\$(rbenv init -)"
 git --work-tree=/var/www/$INPUT_USERNAME --git-dir=/home/$INPUT_USERNAME/$INPUT_USERNAME.git checkout master -f
 (cd /var/www/$INPUT_USERNAME && \\
-bundle install --path vendor --deployment --without development test && \\
+RAILS_ENV=production bundle install --path vendor --deployment --without development test && \\
 RAILS_ENV=production bundle exec rake assets:precompile db:migrate && \\
 chmod 700 config db && chmod 600 config/database.yml config/secrets.yml)
 passenger-config restart-app /var/www/$INPUT_USERNAME
