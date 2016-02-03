@@ -69,4 +69,4 @@ server {
 }
 EOF
 sudo nano /etc/nginx/sites-enabled/$INPUT_USERNAME.conf
-echo "Now get certs from ~/letsencrypt/letsencrypt-auto certonly -d domain.com -d www.domain.com"
+echo "Now get certs from sudo ~/letsencrypt/letsencrypt-auto certonly -d $DEPLOY_HOSTNAME -d www.domain.com"
