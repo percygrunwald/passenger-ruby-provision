@@ -5,7 +5,7 @@ INPUT_USERNAME=`whoami`
 cd /var/www/$INPUT_USERNAME
 
 git --work-tree=/var/www/$INPUT_USERNAME \
---git-dir=/home/$INPUT_USERNAME/$INPUT_USERNAME.git checkout develop -f
+--git-dir=/home/$INPUT_USERNAME/$INPUT_USERNAME.git checkout staging -f
 
 RAILS_ENV=development bundle install --path vendor --deployment
 
@@ -24,7 +24,7 @@ cat << EOF | tee /home/$INPUT_USERNAME/$INPUT_USERNAME.git/hooks/post-receive
 #!/bin/bash
 export PATH="\$HOME/.rbenv/bin:\$PATH"
 eval "\$(rbenv init -)"
-git --work-tree=/var/www/$INPUT_USERNAME --git-dir=/home/$INPUT_USERNAME/$INPUT_USERNAME.git checkout develop -f
+git --work-tree=/var/www/$INPUT_USERNAME --git-dir=/home/$INPUT_USERNAME/$INPUT_USERNAME.git checkout staging -f
 (cd /var/www/$INPUT_USERNAME && \\
 RAILS_ENV=development bundle install --path vendor --deployment --without development test && \\
 RAILS_ENV=staging bundle exec rake assets:precompile db:migrate && \\

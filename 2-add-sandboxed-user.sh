@@ -33,4 +33,4 @@ sudo chmod +x /home/$INPUT_USERNAME/*.sh
 
 # Now log out and push git repo to new user's home directory ~/username.git
 # After pushing to the git repo, log in as new user and
-# $ > ~/4-deploy-app
+# $ > ~/3-deploy-app

@@ -1,11 +1,17 @@
 #!/usr/bin/env bash
 # Prepare the system
-# Add keys for Passenger and RVM repos
+# Add keys for repos
 gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 561F9B9CAC40B2F7
 sudo sh -c 'echo deb https://oss-binaries.phusionpassenger.com/apt/passenger trusty main > /etc/apt/sources.list.d/passenger.list'
+
 sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db && \
-sudo add-apt-repository "deb http://mirrors.hustunique.com/mariadb/repo/10.1/ubuntu trusty main" && \
+sudo add-apt-repository 'deb [arch=amd64,i386,ppc64el] http://ftp.yz.yamagata-u.ac.jp/pub/dbms/mariadb/repo/10.1/ubuntu trusty main'
+
+# add repo for elastic search
+wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add - && \
+echo "deb http://packages.elastic.co/elasticsearch/2.x/debian stable main" | \
+sudo tee -a /etc/apt/sources.list.d/elasticsearch-2.x.list
 
 # Update repos and upgrade
 sudo apt-get update
@@ -35,11 +41,16 @@ python-software-properties libffi-dev \
 apt-transport-https ca-certificates \
 nginx-extras passenger git \
 mariadb-server libmariadbd-dev imagemagick libgmp3-dev \
+openjdk-7-jre elasticsearch \
 nodejs && sudo ln -sf /usr/bin/nodejs /usr/local/bin/node
 
 # Install Let's Encrypt helper
 git clone https://github.com/letsencrypt/letsencrypt
 sudo openssl dhparam -out /etc/nginx/dhparam.pem 2048
+
+# configure elastic search
+sudo update-rc.d elasticsearch defaults 95 10
+sudo /usr/share/elasticsearch/bin/plugin install analysis-smartcn
 
 # Set proper paths in nginx and restart
 PASS_ROOT=`passenger-config --root`
