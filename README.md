@@ -36,18 +36,18 @@ sudo vi /etc/nginx/nginx.conf
 6. Install rbenv and ruby 2.3 for app user and log out (logout is necessary to get the rbenv shim active)
 
 ```bash
-ssh tn_prod@tn-prod
+sudo su - tn_prod
 ./1.1-install-rbenv.sh
 logout
 ```
 
 ```bash
-ssh tn_staging@tn-staging
+sudo su - tn_staging
 ./1.1-install-rbenv.sh
 logout
 ```
 
-7. Push code to git repo on server (no `post-receive` hook is active yet)
+7. Push code to git repo on server (`post-receive` hook is not active yet)
 
 ```bash
 git remote add prod tn_prod@tn-prod:~/tn_prod.git
@@ -62,18 +62,18 @@ git push staging staging
 8. Deploy app as new app user
 
 ```bash
-ssh tn_prod@tn-prod
+sudo su - tn_prod
 ./3-deploy-app.sh
 logout
 ```
 
 ```bash
-ssh tn_staging@tn-staging
+sudo su - tn_staging
 ./3-deploy-app-staging.sh
 logout
 ```
 
-9. Deploy host to nginx as sudoer and edit the `rails_env` setting to match the env
+9. Deploy host to nginx as sudoer, edit the `rails_env` setting to match the env and check that the root domain redirects to `www.` for prod
 
 ```bash
 ssh tn-prod
@@ -100,7 +100,7 @@ ssh tn-staging
 11. Edit the `./5-renew-certs.sh` to match the domains from the previous step
 
 ```bash
-nano ./5-renew-certs.sh
+vi ./5-renew-certs.sh
 ```
 
 Certs can be renewed in future by running

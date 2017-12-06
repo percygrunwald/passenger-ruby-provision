@@ -16,8 +16,8 @@ chmod 600 config/database.yml config/secrets.yml
 cp .env.example .env
 RAKE_SECRET=`bundle exec rake secret`
 echo "SECRET_KEY_BASE=$RAKE_SECRET" >> .env
-nano .env
-RAILS_ENV=production bundle exec rake assets:precompile db:migrate db:seed
+vi .env
+RAILS_ENV=production bundle exec rake assets:precompile db:migrate elasticsearch:reload_indexes
 
 # Add post-receive hook for git
 cat << EOF | tee /home/$INPUT_USERNAME/$INPUT_USERNAME.git/hooks/post-receive

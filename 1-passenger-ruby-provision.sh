@@ -60,14 +60,18 @@ sudo sed -i "s,\# passenger_ruby .*,passenger_ruby /home/$INPUT_USERNAME/.rbenv/
 sudo sed -i 's,# gzip,gzip,g' /etc/nginx/nginx.conf
 sudo service nginx restart
 
-# Add swap
-sudo fallocate -l 4G /swapfile && \
-sudo chmod 600 /swapfile && \
-sudo mkswap /swapfile && \
-sudo swapon /swapfile && \
-echo "/swapfile   none    swap    sw    0   0" | sudo tee -a /etc/fstab && \
-echo "vm.swappiness=10" | sudo tee -a /etc/sysctl.conf && \
-echo "vm.vfs_cache_pressure = 50" | sudo tee -a /etc/sysctl.conf
+# Update Elasticsearch config to use less memory
+sudo sed -i "s,\#*ES_HEAP_SIZE\=.*,ES_HEAP_SIZE=256m,g" /etc/default/elasticsearch
+sudo service elasticsearch restart
+
+# Add swap (uncomment for staging, should avoid swap for prod)
+#sudo fallocate -l 4G /swapfile && \
+#sudo chmod 600 /swapfile && \
+#sudo mkswap /swapfile && \
+#sudo swapon /swapfile && \
+#echo "/swapfile   none    swap    sw    0   0" | sudo tee -a /etc/fstab && \
+#echo "vm.swappiness=10" | sudo tee -a /etc/sysctl.conf && \
+#echo "vm.vfs_cache_pressure = 50" | sudo tee -a /etc/sysctl.conf
 
 # Reboot so that upgraded packages come into effect
 sudo reboot
